@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String        @id @default(uuid())
+  username     String        @unique
+  password     String
+  reservations Reservation[]
+  purchases    Purchase[]
+}
+
+model Drop {
+  id             String        @id @default(uuid())
+  name           String
+  price          Float
+  totalStock     Int
+  availableStock Int 
+  createdAt      DateTime      @default(now())
+  reservations   Reservation[]
+  purchases      Purchase[]
+}
+
+model Reservation {
+  id        String   @id @default(uuid())
+  userId    String
+  dropId    String
+  expiresAt DateTime
+  status    String   @default("PENDING") // PENDING, BOUGHT, EXPIRED
+  drop      Drop     @relation(fields: [dropId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Purchase {
+  id        String   @id @default(uuid())
+  userId    String
+  dropId    String
+  createdAt DateTime @default(now())
+  drop      Drop     @relation(fields: [dropId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
