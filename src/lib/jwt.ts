@@ -10,6 +10,7 @@ export const generateTokenAndSetCookie = (res: Response, userId: string, usernam
     httpOnly: true,
     secure: true,
     sameSite: 'lax',
-    maxAge: 24 * 60 * 60 * 1000
+    maxAge: 24 * 60 * 60 * 1000,
+    path: "/"
   });
 };
